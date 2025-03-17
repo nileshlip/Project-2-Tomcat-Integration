@@ -90,3 +90,36 @@ cd tomcat/bin/
 ```
 
 ### Step2: Integrate Tomcat with Jenkins
+
+- Install `Deploy to Container` plugin in Jenkins. Go to `Manage Jenkins` -> `Manage Plugins`, find the plugin under Available and choose `install without restart`
+
+- Configure Tomcat Server with credentials. Go to `Manage Jenkins` -> `Manage Credentials`. We will select `Add credentials`. We will use the credential we have added to `tomcat-user.xml` file for this step. Since these credentials will be used for deploying app, we will add `deployer` credentials which has `manager-script` role.
+```sh
+Kind: username with password
+username: deployer
+pwd: deployer
+```
+
+- Now we can create our next job with name of `BuildAndDeployJob`. After build step, the artifact will stored under `webapp/target/` directory as `webapp.war`.  
+```sh
+Kind: Maven Project
+SCM: https://github.com/nileshlip/hello-world-Projects.git
+Goal and options: clean install
+Post Build Actions: Deploy war/ear to a container
+WAR/EAR files: **/*.war
+Container: Tomcat 8 (even though we have install v9, this plugin is giving some issues with v9, for that reason we will use v8)
+Credentials: tomcat_deployer
+Tomcat URL: http://<Public_IP_of_Tomcat_server>:8080/ 
+```
+
+- `Save` and `Build` the job. When go to Tomcat server under `Manager App`, you will be able to see our application under `webapp/`
+
+![](app-v1-deployed-to-tomcat.png)
+### Step3: Automate Build and Deploy using Poll SCM
+
+- We can configure our job to be triggered with `Poll SCM` by scheduling a cron job. It will check the repository based on given schedule. If there is any change in repository, it will trigger job and deployed the new version of app to Tomcat server.
+
+- We can also configure a webhook in our repository, whenever there is any `Git push` happens, job will trigger. To be able to setup Webhooks in Github, Go to `Settings` -> `Webhook` -> `Add webhook` 
+```sh
+Payload URL: http://<dns_of_your_jenkins_server>:8080/github-webhook/
+``` 
