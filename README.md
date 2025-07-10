@@ -6,7 +6,7 @@
 - First create an EC2 instance for Tomcat Server
 ```sh
 instanceType: t2.micro
-AMI: Amazon Linux-2
+AMI: ubuntu
 Security Group: 
 22, SSH
 8080, Custom TCP
@@ -15,7 +15,8 @@ Security Group:
 - Next install java-11 in Tomcat server, switch to root user `sudo su -` and run below command. Once installed, check `java -version`
 
 ```sh
-amazon-linux-extras install java-openjdk11
+sudo apt update
+sudo apt install fontconfig openjdk-17-jre -y  
 ```
 
 - Next we will install Tomcat, switch to `/opt` directory 
