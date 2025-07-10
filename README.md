@@ -46,9 +46,9 @@ By default the Manager is only accessible from a browser running on the same mac
 - Go to tomcat directory run `find / -name context.xml` to get the location of `context.xml` file
 
 ```sh
-/opt/tomcat/webapps/examples/META-INF/context.xml
-/opt/tomcat/webapps/host-manager/META-INF/context.xml
-/opt/tomcat/webapps/manager/META-INF/context.xml
+nano /opt/tomcat/webapps/examples/META-INF/context.xml
+nano /opt/tomcat/webapps/host-manager/META-INF/context.xml
+nano /opt/tomcat/webapps/manager/META-INF/context.xml
 ```
 
 - We should update `context.xml` file under `host-manager` and `manager` directories. Currently it is only allowing access from localhost, we will comment out the part shown below in the xml.
